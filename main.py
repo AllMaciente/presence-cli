@@ -1,6 +1,10 @@
 import typer
 
+from utils import configs
+
 app = typer.Typer()
+
+app.add_typer(configs.config_app, name="config")
 
 
 @app.command()
