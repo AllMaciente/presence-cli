@@ -19,6 +19,19 @@ def load_config():
         return json.load(f)
 
 
+def get_config(key: str):
+    """
+    Obtém o valor de uma configuração permitida.
+    """
+    config = load_config()
+    if key not in ALLOWED_KEYS:
+        print(
+            f"Erro: A chave '{key}' não é permitida. Chaves permitidas: {', '.join(ALLOWED_KEYS)}"
+        )
+        raise typer.Exit(code=1)
+    return config.get(key, None)
+
+
 def save_config(config):
     os.makedirs(
         os.path.dirname(CONFIG_PATH), exist_ok=True
@@ -60,9 +73,6 @@ def edit_config():
     """
     Edita manualmente o arquivo de configuração, com aviso.
     """
-    print("⚠️ Aviso: só edite as chaves permitidas!")
-    print(f"Chaves permitidas: {', '.join(ALLOWED_KEYS)}")
-
     editor = os.getenv("EDITOR", "nano")
     if not os.path.exists(CONFIG_PATH):
         save_config({key: None for key in ALLOWED_KEYS})
